@@ -1,15 +1,16 @@
-var shortPressApplied = 0;
+var alphabetIndex = -1;
 var isKeyNotActive = true;
-var shortKeyPressed;
+var setShortKeyPressed;
 var lastButtonPressed;
 
 function determineClick(event, longpress) {
   var target = event.currentTarget;
   var button_pressed = $(target).data("value");
+
   if (lastButtonPressed !== button_pressed){
     reset();
   }
-  clearTimeout(shortKeyPressed);
+
   longpress ? longButtonPress(button_pressed) : shortButtonPress(button_pressed);
 }
 
@@ -31,23 +32,22 @@ function butonAddClickListener() {
 
 function shortButtonPress(button_pressed) {
 	var resultArea = $("#result");
-  var currentShortKeyArray = calculatorKeys[button_pressed];
-  var shortPauseDuration = 150;
+  var currentAlphabetArray = calculatorKeys[button_pressed];
+  var shortPauseDuration = 300;
   lastButtonPressed = button_pressed;
+  clearTimeout(setShortKeyPressed);
+  alphabetIndex = (alphabetIndex >= currentAlphabetArray.length) ? 0 : ++alphabetIndex;
+  console.log('OUTSIDE SetTIMEUT alphabetIndex-->', alphabetIndex);
 
-
-  if(isKeyNotActive) {
-    isKeyNotActive = false; // Key is active now hence disabled to enter this loop.
-    shortKeyPressed = setTimeout(function() {
-      resultArea.val(resultArea.val() + currentShortKeyArray[shortPressApplied]);
-      shortPressApplied = (shortPressApplied >= currentShortKeyArray.length-1) ? 0 : ++shortPressApplied;
-      isKeyNotActive = true;
-    }, shortPauseDuration);
-  }
+  setShortKeyPressed = setTimeout(function() {
+    console.log('inside SetTIMEUT alphabetIndex-->', alphabetIndex);
+    resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
+    alphabetIndex++;
+  }, shortPauseDuration);
 }
 
 function reset() {
-  shortPressApplied = 0;
+  alphabetIndex = -1;
 }
 
 function longButtonPress(button_pressed) {
@@ -60,9 +60,7 @@ $(document).ready(function(){
 });
 
 function t9(text,button_pressed) {
-		var selectedText = Object.keys(calculatorKeys);
-
-    return selectedText;
+  resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
 }
 
 var calculatorKeys = {
