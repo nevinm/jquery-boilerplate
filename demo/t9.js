@@ -4,6 +4,10 @@ var lastButtonPressed;
 var shortDuration = 300;
 var longDuration = 700;
 var resultArea;
+var short = {
+  firstShortButtonPress: null,
+  counter: 0,
+};
 
 function determineClick(event, longpress) {
   var target = event.currentTarget;
@@ -11,7 +15,7 @@ function determineClick(event, longpress) {
 
   // If last button pressed is not the current button pressed
   if (lastButtonPressed !== button_pressed){
-    reset();
+    resetShortKeyPress();
   }
 
   longpress ? longButtonPress(button_pressed) : shortButtonPress(button_pressed);
@@ -37,14 +41,28 @@ function shortButtonPress(button_pressed) {
   lastButtonPressed = button_pressed;
   clearTimeout(displayShortKeyPressed);
   alphabetIndex = (alphabetIndex +1 >= currentAlphabetArray.length) ? 0 : ++alphabetIndex;
+
+  if(short.counter !== 0 && short.firstShortButtonPress === button_pressed) {
+    resultArea.val(resultArea.val().slice(0, -1));
+  }
+
+  // Resetting
+  short.counter++;
+  short.firstShortButtonPress = button_pressed;
+
+  //Setting the value
+  resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
   displayShortKeyPressed = setTimeout(function() {
-    resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
-    alphabetIndex = -1;
+    resetShortKeyPress();
   }, shortDuration);
 }
 
-function reset() {
+function resetShortKeyPress() {
   alphabetIndex = -1;
+  short = {
+    firstShortButtonPress: null,
+    counter: 0,
+  };
 }
 
 function longButtonPress(button_pressed) {
