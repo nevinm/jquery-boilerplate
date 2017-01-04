@@ -1,12 +1,15 @@
 var alphabetIndex = -1;
-var isKeyNotActive = true;
-var setShortKeyPressed;
+var displayShortKeyPressed;
 var lastButtonPressed;
+var shortDuration = 300;
+var longDuration = 700;
+var resultArea;
 
 function determineClick(event, longpress) {
   var target = event.currentTarget;
   var button_pressed = $(target).data("value");
 
+  // If last button pressed is not the current button pressed
   if (lastButtonPressed !== button_pressed){
     reset();
   }
@@ -15,9 +18,8 @@ function determineClick(event, longpress) {
 }
 
 function butonAddClickListener() {
-	    var longpress = false;
-      var humanHoldDuration = 700;
- 		  var startTime, endTime;
+    var longpress = false;
+	  var startTime, endTime;
 
     $("button")
     .on('mousedown', function (event) {
@@ -25,25 +27,20 @@ function butonAddClickListener() {
     })
     .on('mouseup', function (event) {
         endTime = new Date().getTime();
-        longpress = (endTime - startTime < humanHoldDuration) ? false : true;
+        longpress = (endTime - startTime < longDuration) ? false : true;
         determineClick(event, longpress);
     });
 }
 
 function shortButtonPress(button_pressed) {
-	var resultArea = $("#result");
   var currentAlphabetArray = calculatorKeys[button_pressed];
-  var shortPauseDuration = 300;
   lastButtonPressed = button_pressed;
-  clearTimeout(setShortKeyPressed);
-  alphabetIndex = (alphabetIndex >= currentAlphabetArray.length) ? 0 : ++alphabetIndex;
-  console.log('OUTSIDE SetTIMEUT alphabetIndex-->', alphabetIndex);
-
-  setShortKeyPressed = setTimeout(function() {
-    console.log('inside SetTIMEUT alphabetIndex-->', alphabetIndex);
+  clearTimeout(displayShortKeyPressed);
+  alphabetIndex = (alphabetIndex +1 >= currentAlphabetArray.length) ? 0 : ++alphabetIndex;
+  displayShortKeyPressed = setTimeout(function() {
     resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
-    alphabetIndex++;
-  }, shortPauseDuration);
+    alphabetIndex = -1;
+  }, shortDuration);
 }
 
 function reset() {
@@ -51,11 +48,11 @@ function reset() {
 }
 
 function longButtonPress(button_pressed) {
-  var resultArea = $("#result");
   resultArea.val(resultArea.val() + button_pressed);
 }
 
 $(document).ready(function(){
+  resultArea = $("#result");
   butonAddClickListener();
 });
 
