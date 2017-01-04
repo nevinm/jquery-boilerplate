@@ -6,6 +6,9 @@ var lastButtonPressed;
 function determineClick(event, longpress) {
   var target = event.currentTarget;
   var button_pressed = $(target).data("value");
+  if (lastButtonPressed !== button_pressed){
+    reset();
+  }
   clearTimeout(shortKeyPressed);
   longpress ? longButtonPress(button_pressed) : shortButtonPress(button_pressed);
 }
@@ -28,11 +31,9 @@ function butonAddClickListener() {
 
 function shortButtonPress(button_pressed) {
 	var resultArea = $("#result");
-  if(lastButtonPressed !== button_pressed){
-    reset();
-  }
   var currentShortKeyArray = calculatorKeys[button_pressed];
   var shortPauseDuration = 150;
+  lastButtonPressed = button_pressed;
 
 
   if(isKeyNotActive) {
@@ -46,7 +47,7 @@ function shortButtonPress(button_pressed) {
 }
 
 function reset() {
-  shortKeyPressed = 0;
+  shortPressApplied = 0;
 }
 
 function longButtonPress(button_pressed) {
