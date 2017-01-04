@@ -56,10 +56,6 @@ $(document).ready(function(){
   butonAddClickListener();
 });
 
-function t9(text,button_pressed) {
-  resultArea.val(resultArea.val() + currentAlphabetArray[alphabetIndex]);
-}
-
 var calculatorKeys = {
   '1': ['.', ',', '!'],
   '2': ['a', 'b', 'c'],
@@ -70,5 +66,8 @@ var calculatorKeys = {
   '7': ['p','q','r','s'],
   '8': ['t','u','v'],
   '9': ['w','x','y','z'],
-  '0':[' ']
+  '9': ['w','x','y','z'],
+  '0': [' '],
+  '*': ['*'],
+  '#': ['#']
 }
